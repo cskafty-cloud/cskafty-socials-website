@@ -4,7 +4,7 @@ on:
     branches: [main]
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 concurrency:
@@ -56,3 +56,16 @@ jobs:
             CSKAFTY-Source.zip
           if-no-files-found: error
           retention-days: 30
+
+      - name: Publish public Windows release downloads
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: desktop-latest
+          name: CSKAFTY Windows App
+          body: Download CSKAFTY.exe to open the live CSKAFTY website in your default browser. The ZIP includes the executable and launcher script.
+          files: |
+            publish/CSKAFTY.Launcher.exe
+            CSKAFTY-Windows.zip
+            CSKAFTY-Source.zip
+          overwrite_files: true
+          make_latest: true
