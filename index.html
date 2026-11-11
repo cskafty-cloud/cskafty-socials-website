@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090909"><meta name="description" content="CSKAFTY — official links, music and socials.">
+<title>CSKAFTY — Official Links</title>
+<style>
+:root{color-scheme:dark;--bg:#090909;--panel:#151515;--line:#292929;--muted:#a7a7a7;--lime:#d6ff35;--white:#f5f5f1}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 5%,#242424 0,transparent 42%),var(--bg);color:var(--white);font-family:Arial,Helvetica,sans-serif;min-height:100vh}button,input{font:inherit}.wrap{width:min(920px,92vw);margin:auto}.hero{min-height:100svh;display:grid;place-items:center;text-align:center;padding:42px 0}.eyebrow{color:var(--lime);font-size:11px;letter-spacing:.42em;text-transform:uppercase}.logo{font-size:clamp(62px,15vw,142px);font-weight:1000;letter-spacing:-.09em;line-height:.9;margin:22px 0;text-shadow:0 8px 55px #000}.logo span{color:var(--lime)}.tag{color:#c5c5c5;letter-spacing:.2em;text-transform:uppercase;font-size:12px}.enter,.save,.login{border:0;background:var(--lime);color:#101010;font-weight:900;letter-spacing:.14em;padding:17px 30px;border-radius:3px;cursor:pointer}.enter{margin-top:36px;min-width:190px}.enter:hover,.save:hover,.login:hover{filter:brightness(.9)}.sub{margin-top:20px;color:#777;font-size:12px}.links-page{display:none;padding:55px 0 80px}.top{text-align:center;margin-bottom:28px}.top .logo{font-size:clamp(48px,10vw,82px);margin:0 0 14px}.top p{color:var(--muted);font-size:13px;letter-spacing:.14em}.socials{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.social{display:flex;align-items:center;justify-content:space-between;text-decoration:none;color:var(--white);background:linear-gradient(110deg,#191919,#101010);border:1px solid var(--line);padding:19px 20px;border-radius:5px;font-weight:800;letter-spacing:.08em;transition:.2s}.social:hover{border-color:var(--lime);transform:translateY(-2px)}.social small{color:var(--lime);font-size:10px;letter-spacing:.1em}.foot{text-align:center;color:#696969;font-size:11px;letter-spacing:.16em;margin-top:38px}.admin-toggle{display:block;margin:26px auto 0;background:none;border:1px solid #343434;color:#999;padding:9px 14px;border-radius:3px;cursor:pointer;font-size:11px}.panel{display:none;margin:22px auto 0;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:5px;max-width:650px}.panel h2{font-size:16px;letter-spacing:.12em}.field{display:grid;grid-template-columns:130px 1fr;gap:10px;align-items:center;margin:10px 0}.field label{font-size:12px;color:#bbb}.field input{width:100%;background:#090909;border:1px solid #383838;color:white;padding:11px;border-radius:3px}.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px}.status{font-size:12px;color:var(--muted)}.back{background:none;border:0;color:#aaa;cursor:pointer;margin-bottom:22px}.hidden{display:none!important}@media(max-width:560px){.socials{grid-template-columns:1fr}.field{grid-template-columns:1fr;gap:5px}.links-page{padding-top:35px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<section class="hero" id="welcome"><div><div class="eyebrow">Independent sound · Australia</div><div class="logo">CSK<span>A</span>FTY</div><div class="tag">Music · socials · everything</div><button class="enter" id="enter">ENTER THE WORLD</button><div class="sub">OFFICIAL LINKS</div></div></section>
+<section class="links-page" id="links">
+<button class="back" id="back">← BACK</button>
+<header class="top"><div class="logo">CSK<span>A</span>FTY</div><p>OFFICIAL SOCIALS & MUSIC</p></header>
+<div class="socials" id="socials"></div>
+<button class="admin-toggle" id="adminToggle">EDIT LINKS</button>
+<section class="panel" id="adminPanel"><h2>MANAGE YOUR LINKS</h2><p class="status" id="authStatus">Sign in with your site admin account to edit and sync links.</p>
+<div id="loginArea"><div class="field"><label for="email">Admin email</label><input id="email" type="email" autocomplete="username"></div><div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password"></div><button class="login" id="login">SIGN IN</button></div>
+<div id="editor" class="hidden"></div><div class="actions"><button class="save hidden" id="save">SAVE CHANGES</button><button class="admin-toggle" id="logout">SIGN OUT</button></div>
+</section>
+<footer class="foot">CSKAFTY · OFFICIAL PAGE</footer>
+</section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* Add your Supabase project URL and anon key after creating the free project. */
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const DEFAULTS = [
+ ["Twitch","https://www.twitch.tv/","LIVE STREAMS"],["Kick","https://kick.com/","LIVE STREAMS"],
+ ["YouTube","https://www.youtube.com/","VIDEOS"],["Spotify","https://open.spotify.com/","LISTEN"],
+ ["SoundCloud","https://soundcloud.com/","MUSIC"],["TikTok","https://www.tiktok.com/","SHORTS"],
+ ["Instagram","https://www.instagram.com/","PHOTOS"],["Discord","https://discord.com/","COMMUNITY"],
+ ["Facebook","https://www.facebook.com/","COMMUNITY"],["X","https://x.com/","UPDATES"]
+];
+let links = DEFAULTS.map(([name,url,note])=>({name,url,note}));
+let client=null, session=null;
+const $=id=>document.getElementById(id);
+function draw(){ $("socials").innerHTML=""; links.forEach(item=>{const a=document.createElement("a");a.className="social";a.href=item.url;a.target="_blank";a.rel="noopener noreferrer";const n=document.createElement("span");n.textContent=item.name;const s=document.createElement("small");s.textContent=item.note||"OPEN";a.append(n,s);$("socials").append(a)})}
+function setPage(show){$("welcome").style.display=show?"none":"grid";$("links").style.display=show?"block":"none";if(show)draw()}
+$("enter").onclick=()=>setPage(true);$("back").onclick=()=>setPage(false);
+$("adminToggle").onclick=()=>{$("adminPanel").style.display=$("adminPanel").style.display==="block"?"none":"block"};
+function configReady(){return SUPABASE_URL.startsWith("https://")&&SUPABASE_ANON_KEY!=="YOUR_SUPABASE_ANON_KEY"&&window.supabase}
+function message(t){$("authStatus").textContent=t}
+function buildEditor(){const root=$("editor");root.innerHTML="";links.forEach((item,i)=>{const row=document.createElement("div");row.className="field";const label=document.createElement("label");label.textContent=item.name;const input=document.createElement("input");input.type="url";input.value=item.url;input.placeholder="https://";input.dataset.index=i;input.addEventListener("input",()=>links[i].url=input.value);row.append(label,input);root.append(row)});$("loginArea").classList.add("hidden");root.classList.remove("hidden");$("save").classList.remove("hidden");$("logout").classList.remove("hidden")}
+async function loadLinks(){if(!client)return;const {data,error}=await client.from("site_settings").select("links").eq("id",1).maybeSingle();if(!error&&data?.links&&Array.isArray(data.links)){links=data.links;draw()}}
+$("login").onclick=async()=>{if(!client){message("Cloud sync is not connected yet. Follow SETUP.md in the repository.");return}const {data,error}=await client.auth.signInWithPassword({email:$("email").value,password:$("password").value});if(error){message(error.message);return}session=data.session;message("Signed in. Edit your links below.");await loadLinks();buildEditor()};
+$("save").onclick=async()=>{if(!client||!session){message("Sign in before saving.");return}const {error}=await client.from("site_settings").upsert({id:1,links,updated_at:new Date().toISOString()});message(error?error.message:"Saved. Your links are now shared across devices.");draw()};
+$("logout").onclick=async()=>{if(client)await client.auth.signOut();session=null;$("editor").classList.add("hidden");$("loginArea").classList.remove("hidden");$("save").classList.add("hidden");message("Signed out.")};
+if(configReady()){client=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);loadLinks();client.auth.getSession().then(({data})=>{session=data.session})}else message("Cloud sync setup required — see SETUP.md in the GitHub repository.");
+draw();
+</script>
+</body></html>
