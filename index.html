@@ -28,17 +28,20 @@ body:after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;backg
 @keyframes loadbar{to{width:100%}}
 @media(prefers-reduced-motion:reduce){.loading-fill{animation-duration:.2s}}
 
-/* Clear, unblurred CSKAFTY artwork across the site and loading screen */
+/* High-clarity CSKAFTY artwork across the site and loading screen.
+   Keep the original image crisp: no blur, no backdrop blur, no opaque tint layer. */
 html,body{min-height:100%;background-color:#020402}
-body{background-image:url('./assets/cskafty-background.webp')!important;background-position:center center!important;background-size:cover!important;background-attachment:fixed!important;background-repeat:no-repeat!important}
+body{background-image:none!important}
+body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background-image:url('./assets/cskafty-background.webp');background-position:center center;background-size:cover;background-repeat:no-repeat;filter:brightness(1.07) contrast(1.13) saturate(1.16);transform:translateZ(0);will-change:transform}
 body:after{background:transparent!important}
-.wrap{z-index:2!important}
+.wrap{position:relative;z-index:2!important}
 .gate,.hero,.links-page{position:relative;z-index:1;isolation:isolate}
 .gate:before,.hero:before,.links-page:before{background:transparent!important;opacity:0!important;filter:none!important}
-.gate-card,.panel,.social{background:rgba(3,9,3,.48)!important;border-color:rgba(166,255,0,.42)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:0 8px 36px rgba(0,0,0,.28),0 0 22px rgba(166,255,0,.08)}
-.top,.admin-toggle,.back{background:rgba(2,8,2,.40)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
-.loading-screen{background-image:url('./assets/cskafty-background.webp')!important;background-position:center center!important;background-size:cover!important;background-repeat:no-repeat!important}
-.loading-screen:before{background:rgba(0,0,0,.10)!important}
+.gate-card,.panel,.social{background:rgba(3,9,3,.40)!important;border-color:rgba(166,255,0,.48)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:0 8px 36px rgba(0,0,0,.24),0 0 22px rgba(166,255,0,.10)}
+.top,.admin-toggle,.back{background:rgba(2,8,2,.34)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.loading-screen{background-image:url('./assets/cskafty-background.webp')!important;background-position:center center!important;background-size:cover!important;background-repeat:no-repeat!important;filter:none!important}
+.loading-screen:before{background:rgba(0,0,0,.04)!important;filter:none!important}
+.loading-content{text-shadow:0 2px 12px rgba(0,0,0,.72)}
 
 </style>
 </head>
