@@ -26,9 +26,9 @@
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-/* Add your Supabase project URL and anon key after creating the free project. */
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+/* Supabase browser configuration. This is the publishable key, not a service-role secret. */
+const SUPABASE_URL = "https://tedzxxvufktzspkxxfpv.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_BI9kAPGuzt_i3EPZPMMl6A_HcBrFzSX";
 const DEFAULTS = [
  ["Twitch","https://www.twitch.tv/","LIVE STREAMS"],["Kick","https://kick.com/","LIVE STREAMS"],
  ["YouTube","https://www.youtube.com/","VIDEOS"],["Spotify","https://open.spotify.com/","LISTEN"],
@@ -47,10 +47,10 @@ function configReady(){return SUPABASE_URL.startsWith("https://")&&SUPABASE_ANON
 function message(t){$("authStatus").textContent=t}
 function buildEditor(){const root=$("editor");root.innerHTML="";links.forEach((item,i)=>{const row=document.createElement("div");row.className="field";const label=document.createElement("label");label.textContent=item.name;const input=document.createElement("input");input.type="url";input.value=item.url;input.placeholder="https://";input.dataset.index=i;input.addEventListener("input",()=>links[i].url=input.value);row.append(label,input);root.append(row)});$("loginArea").classList.add("hidden");root.classList.remove("hidden");$("save").classList.remove("hidden");$("logout").classList.remove("hidden")}
 async function loadLinks(){if(!client)return;const {data,error}=await client.from("site_settings").select("links").eq("id",1).maybeSingle();if(!error&&data?.links&&Array.isArray(data.links)){links=data.links;draw()}}
-$("login").onclick=async()=>{if(!client){message("Cloud sync is not connected yet. Follow SETUP.md in the repository.");return}const {data,error}=await client.auth.signInWithPassword({email:$("email").value,password:$("password").value});if(error){message(error.message);return}session=data.session;message("Signed in. Edit your links below.");await loadLinks();buildEditor()};
+$("login").onclick=async()=>{if(!client){message("Cloud sync is not configured yet. Run supabase/schema.sql and create your admin account; see README.md.");return}const {data,error}=await client.auth.signInWithPassword({email:$("email").value,password:$("password").value});if(error){message(error.message);return}session=data.session;message("Signed in. Edit your links below.");await loadLinks();buildEditor()};
 $("save").onclick=async()=>{if(!client||!session){message("Sign in before saving.");return}const {error}=await client.from("site_settings").upsert({id:1,links,updated_at:new Date().toISOString()});message(error?error.message:"Saved. Your links are now shared across devices.");draw()};
 $("logout").onclick=async()=>{if(client)await client.auth.signOut();session=null;$("editor").classList.add("hidden");$("loginArea").classList.remove("hidden");$("save").classList.add("hidden");message("Signed out.")};
-if(configReady()){client=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);loadLinks();client.auth.getSession().then(({data})=>{session=data.session})}else message("Cloud sync setup required — see SETUP.md in the GitHub repository.");
+if(configReady()){client=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);loadLinks();client.auth.getSession().then(({data})=>{session=data.session})}else message("Supabase project configured. Run supabase/schema.sql and create your admin account; see README.md.");
 draw();
 </script>
 </body></html>
