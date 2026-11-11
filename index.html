@@ -79,6 +79,16 @@ body:after{background:transparent!important;opacity:0!important}
 .social:hover{background:rgba(166,255,0,.10)!important;border-color:var(--lime)!important}
 .gate-card,.panel{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
 
+
+/* Match the main website page to the clear loading screen: no dark tint or blur layers. */
+body:after{background:transparent!important;opacity:0!important;display:none!important}
+.gate:before,.hero:before,.links-page:before{background:transparent!important;opacity:0!important;filter:none!important;display:none!important}
+.gate,.hero,.links-page{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.gate-card,.panel,.social,.top,.admin-toggle,.back{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.gate-card,.panel{background:rgba(2,6,2,.12)!important;box-shadow:none!important}
+.social,.social:hover{background:rgba(2,6,2,.08)!important;background-image:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:none!important}
+.top,.admin-toggle,.back{background:transparent!important}
+
 </style>
 </head>
 <body>
