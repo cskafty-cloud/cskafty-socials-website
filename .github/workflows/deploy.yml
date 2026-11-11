@@ -64,7 +64,7 @@ jobs:
           name: CSKAFTY Windows App
           body: Download CSKAFTY.exe to open the live CSKAFTY website in your default browser. The ZIP includes the executable and launcher script.
           files: |
-            publish/CSKAFTY.Launcher.exe
+            package/CSKAFTY.exe
             CSKAFTY-Windows.zip
             CSKAFTY-Source.zip
           overwrite_files: true
