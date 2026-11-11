@@ -1,4 +1,4 @@
-name: Deploy CSKAFTY website
+name: Deploy CSKAFTY website and build Windows app
 on:
   push:
     branches: [main]
@@ -21,6 +21,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Configure Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
@@ -28,3 +30,29 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  windows-build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Publish standalone Windows executable
+        run: dotnet publish windows/CSKAFTY.Launcher/CSKAFTY.Launcher.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o publish
+      - name: Package Windows app and source ZIP
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path package | Out-Null
+          Copy-Item publish/CSKAFTY.Launcher.exe package/CSKAFTY.exe
+          Copy-Item windows/Launch-CSKAFTY.bat package/
+          Copy-Item README.md package/
+          Compress-Archive -Path package/* -DestinationPath CSKAFTY-Windows.zip -Force
+          Compress-Archive -Path index.html,README.md,supabase,windows,.github -DestinationPath CSKAFTY-Source.zip -Force
+      - name: Upload Windows downloads
+        uses: actions/upload-artifact@v4
+        with:
+          name: CSKAFTY-Windows-and-Source
+          path: |
+            CSKAFTY-Windows.zip
+            CSKAFTY-Source.zip
+          if-no-files-found: error
+          retention-days: 30
