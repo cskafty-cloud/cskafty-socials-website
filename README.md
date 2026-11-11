@@ -24,7 +24,7 @@ The Supabase Auth user has already been created. To configure the database and g
 The browser uses only the Supabase publishable key. Never put a service-role key or a password in this repository. Password verification is handled by Supabase Auth.
 
 ## Windows launcher
-Run `windows/Launch-CSKAFTY.bat` to open the live website in Microsoft Edge app mode.
+Download `CSKAFTY.exe` from the public [CSKAFTY Windows release](https://github.com/cskafty-cloud/cskafty-socials-website/releases/tag/desktop-latest) and double-click it to open the live website in your default browser. The release also includes `CSKAFTY-Windows.zip` and `CSKAFTY-Source.zip`. You can also run `windows/Launch-CSKAFTY.bat` from the source repository.
 
 ## Important
 - Replace the default platform homepages with your actual profile URLs in the admin editor.
