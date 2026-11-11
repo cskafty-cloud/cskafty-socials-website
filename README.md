@@ -14,10 +14,21 @@ The page displays default platform links until Supabase is configured. To enable
 1. Create a free Supabase project.
 2. In Supabase SQL Editor, run the SQL in `supabase/schema.sql`.
 3. Create an Auth user for yourself in Supabase Authentication → Users.
-4. Copy the project URL and anon/public key from Project Settings → API.
-5. Edit `index.html`: replace `YOUR_SUPABASE_URL` and `YOUR_SUPABASE_ANON_KEY`.
-6. In the SQL editor, add your Auth user's UUID to the `site_admins` table using the example SQL at the bottom of `supabase/schema.sql`.
-7. Commit the updated file. Sign in using **EDIT LINKS** on the website.
+4. The current site is already configured with this project's Supabase URL and browser publishable key. The publishable key is safe to expose in a browser; never use a service-role key.
+5. Create the admin Auth user with email `cskafty@gmail.com` in Authentication → Users. Set or reset its password in Supabase; passwords are verified by Supabase Auth and are never stored in this repository.
+6. In the SQL editor, run the admin-membership SQL below after the Auth user exists:
+
+```sql
+do $
+declare admin_id uuid;
+begin
+  select id into admin_id from auth.users where lower(email) = lower('cskafty@gmail.com');
+  if admin_id is null then raise exception 'Create the Supabase Auth user first.'; end if;
+  insert into public.site_admins (user_id) values (admin_id) on conflict (user_id) do nothing;
+end $;
+```
+
+7. The first screen offers admin sign-in or **CONTINUE AS VISITOR**. Admin sign-in is restricted to `cskafty@gmail.com`; visitors do not need an account.
 
 The anon key is designed to be public in a browser. Never put a Supabase service-role key in this website.
 
