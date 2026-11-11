@@ -35,3 +35,8 @@ insert into public.site_settings (id, links) values (1, '[
 
 -- After creating your Supabase Auth user, replace USER_UUID with that user's UUID:
 -- insert into public.site_admins (user_id) values ('USER_UUID');
+
+-- Allow an authenticated user to verify their own admin membership.
+-- Required so the admin-only site_settings write policies can see the membership row.
+create policy "Admins can read own membership" on public.site_admins
+  for select to authenticated using (user_id = auth.uid());
